@@ -10,4 +10,9 @@ public @Data  class Apple {
 
     private AppleColor color;
     private int weight;
+
+    public Apple(AppleColor color, int weight){
+        this.color = color;
+        this.weight = weight;
+    }
 }
