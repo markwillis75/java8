@@ -1,4 +1,4 @@
-package java8;
+package java8.lambda;
 
 import java8.lambda.MyFunction;
 import java8.pojo.*;
