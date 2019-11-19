@@ -3,10 +3,9 @@ package java8.streams;
 import java8.pojo.Trader;
 import java8.pojo.Transaction;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.Comparator.comparing;
@@ -15,25 +14,10 @@ import static java.util.Comparator.comparing;
  * Created by Mark on 19/11/2019.
  */
 public class TraderApp {
-
-    private Trader raoul = new Trader("Raoul", "Cambridge");
-    private Trader mario = new Trader("Mario", "Milan");
-    private Trader alan  = new Trader("Alan", "Cambridge");
-    private Trader brian = new Trader("Brian", "Cambridge");
-
-
     private List<Transaction> transactions;
 
-    public TraderApp(){
-        transactions=
-            Arrays.asList(
-                    new Transaction(brian, 2011, 300),
-                    new Transaction(raoul, 2012, 1000),
-                    new Transaction(raoul, 2011, 400),
-                    new Transaction(mario, 2012, 710),
-                    new Transaction(mario, 2012, 700),
-                    new Transaction(alan, 2012, 950)
-            );
+    public TraderApp(List<Transaction> transactions){
+        this.transactions = transactions;
     }
 
     public List<Transaction> getAll2011TransationsLowToHigh(){
@@ -52,11 +36,11 @@ public class TraderApp {
                 .collect(Collectors.toList());
     }
 
-    public List<Trader> getAllTradersFromCambridgeSortedByNameAsString(){
+    public List<Trader> getAllTradersFromCitySortedByNameAsString(String city){
         return transactions
                 .stream()
                 .map(transaction -> transaction.getTrader())
-                .filter(trader -> trader.getCity().equalsIgnoreCase("cambridge"))
+                .filter(trader -> trader.getCity().equalsIgnoreCase(city))
                 .distinct()
                 .sorted(comparing(Trader::getName))
                 .collect(Collectors.toList());
@@ -70,5 +54,24 @@ public class TraderApp {
                 .sorted()
                 .reduce((a, b) -> a + ", " + b)
                 .get();
+    }
+
+    public boolean getAreAnyTradersBasedInCity(String city){
+        return transactions
+                .stream()
+                .map(transaction -> transaction.getTrader())
+                .anyMatch(trader -> trader.getCity().equalsIgnoreCase(city));
+    }
+
+    public Optional<Transaction> getHighestValueTransation(){
+        return transactions
+                .stream()
+                .max(Comparator.comparing(Transaction::getValue));
+    }
+
+    public Optional<Transaction> getLowestValueTransation(){
+        return transactions
+                .stream()
+                .min(comparing(Transaction::getValue));
     }
 }
